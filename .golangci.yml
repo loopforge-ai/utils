@@ -1,0 +1,56 @@
+version: "2"
+
+formatters:
+  settings:
+    gofmt:
+      rewrite-rules:
+        - pattern: "interface{}"
+          replacement: "any"
+        - pattern: "a[b:len(a)]"
+          replacement: "a[b:]"
+
+linters:
+  default: all
+  disable: # Disable overly strict or noisy linters
+    - depguard # Import restrictions - not configured, blocks all imports
+    - dupl # Duplicate code detection - too strict for test files
+    - err113 # Error comparison - too strict
+    - exhaustruct # Requires all struct fields - too verbose for tests
+    - forbidigo # Forbids print statements - needed for CLI output
+    - forcetypeassert # Type assertion checks - handled by design in event handlers
+    - gochecknoglobals # Global variables - needed for enum slices and computed prompts
+    - ireturn # Disallows returning interfaces - conflicts with DDD patterns
+    - lll # Line length - handled by formatter
+    - mnd # Magic number detection - too noisy
+    - nlreturn # Newline before return - stylistic preference
+    - noctx # Requires context in HTTP - too strict for tests
+    - noinlineerr # Inline error handling - stylistic preference
+    - paralleltest # Requires t.Parallel() - not always appropriate
+    - tagliatelle # JSON tag naming - project uses snake_case intentionally
+    - varnamelen # Variable name length - too strict for idiomatic Go
+    - wrapcheck # Error wrapping - too strict for simple cases
+    - wsl # Deprecated, replaced by wsl_v5
+    - wsl_v5 # Whitespace linter - too opinionated
+
+  settings:
+    gosec:
+      excludes:
+        - G301 # Directory permissions - 0755 is acceptable for test directories
+        - G703 # Taint: path traversal - no sanitizer support in engine, paths are from internal config
+        - G704 # Taint: SSRF - no sanitizer support in engine, endpoints are from config at startup
+        - G706 # Taint: log injection - no sanitizer support in engine, slog uses structured logging
+    govet:
+      enable-all: true
+    revive:
+      rules:
+        - name: exported
+          disabled: true
+        - name: package-comments
+          disabled: true
+        - name: unused-parameter
+          disabled: true
+        - name: var-naming
+          disabled: true
+
+run:
+  timeout: 5m
