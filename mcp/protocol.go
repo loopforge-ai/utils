@@ -8,7 +8,7 @@ type capabilities struct {
 // ContentBlock represents a content block in tool results.
 type ContentBlock struct {
 	Type string `json:"type"`
-	Text string `json:"text,omitempty"`
+	Text string `json:"text"`
 }
 
 // implementation represents server or client implementation info.

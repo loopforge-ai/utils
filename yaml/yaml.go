@@ -557,6 +557,9 @@ func setScalar(field reflect.Value, s string) error { //nolint:cyclop // natural
 
 // setSliceFromStrings sets a []string or []T field from a list of string values.
 func setSliceFromStrings(field reflect.Value, ft reflect.Type, items []string) error {
+	if len(items) == 0 {
+		return nil
+	}
 	if ft.Elem().Kind() == reflect.String {
 		for _, item := range items {
 			field.Set(reflect.Append(field, reflect.ValueOf(unquote(strings.TrimSpace(item)))))

@@ -752,6 +752,25 @@ func Test_Unmarshal_With_EmptyFlowSequence_Should_ParseEmpty(t *testing.T) {
 	assert.That(t, "tags should be empty", len(s.Tags), 0)
 }
 
+func Test_Unmarshal_With_EmptyFlowSequenceOfStructs_Should_ParseEmpty(t *testing.T) {
+	t.Parallel()
+	// Arrange
+	type Item struct {
+		Name string `yaml:"name"`
+	}
+	type S struct {
+		Items []Item `yaml:"items"`
+	}
+	var s S
+
+	// Act
+	err := yaml.Unmarshal([]byte("items: []"), &s)
+
+	// Assert
+	assert.That(t, "err should be nil", err, nil)
+	assert.That(t, "items should be empty", len(s.Items), 0)
+}
+
 func Test_Unmarshal_With_EmptyInput_Should_NotError(t *testing.T) {
 	t.Parallel()
 	// Arrange
