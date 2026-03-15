@@ -42,6 +42,12 @@ func (s *Server) Name() string {
 	return s.name
 }
 
+// HandleJSONRPC processes a single JSON-RPC request and returns the response.
+// This is the transport-agnostic entry point used by both stdio and HTTP transports.
+func (s *Server) HandleJSONRPC(ctx context.Context, req Request) Response {
+	return s.routeRequest(ctx, req)
+}
+
 // RegisterTool registers a tool with the server.
 func (s *Server) RegisterTool(tool Tool) {
 	s.mu.Lock()
