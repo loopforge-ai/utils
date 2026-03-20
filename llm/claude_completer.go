@@ -26,11 +26,11 @@ func NewClaudeCompleter(model string) *ClaudeCompleter {
 
 // Complete sends system and user prompts to the Claude CLI and returns the response.
 func (c *ClaudeCompleter) Complete(ctx context.Context, system, user string) (string, error) {
-	cmd := exec.CommandContext(ctx, "claude", //nolint:gosec // claude CLI is a trusted tool
-		"--model", c.model,
-		"--print",
-		"--system-prompt", system,
-	)
+	args := []string{"--print", "--system-prompt", system}
+	if c.model != "" {
+		args = append([]string{"--model", c.model}, args...)
+	}
+	cmd := exec.CommandContext(ctx, "claude", args...) //nolint:gosec // claude CLI is a trusted tool
 	cmd.Stdin = strings.NewReader(user)
 
 	var stdout, stderr bytes.Buffer
